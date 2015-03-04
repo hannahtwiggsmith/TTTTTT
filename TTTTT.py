@@ -2,8 +2,10 @@ import os, sys
 import pygame
 from pygame.locals import *
 
+clock = pygame.time.Clock()
+
 def load_image(name, colorkey = None):
-	fullname = os.path.join('TTTTTimages', name)
+	fullname = os.path.join('media/images', name)
 	image = pygame.image.load(fullname)
 	image = image.convert()
 	if colorkey != None:
@@ -22,6 +24,7 @@ class TTTTTMain:
 		self.LoadSprites()
 	def MainLoop(self):
 		while 1:
+			clock.tick(60)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					sys.exit()
