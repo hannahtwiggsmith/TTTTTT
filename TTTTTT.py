@@ -25,7 +25,7 @@ class TTTTTMain:
 		pygame.key.set_repeat(1)
 	def MainLoop(self):
 		while 1:
-			clock.tick(60)
+			clock.tick(30)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					sys.exit()
@@ -57,12 +57,14 @@ class Turtle(pygame.sprite.Sprite):
 		elif (key == K_LEFT):
 			xMove = -10
 		self.rect.move_ip(xMove,yMove)
+
 # class level(levelBase.Level):
 # 	def __init__(self):
 # 		self.BLOCK = 1
 # 		self.TURTLE = 2
 # 	def getLayout(self):
-# 		return [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],\
+# 		return [1,1,1,1
+#,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],\
 # 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\
 # 		[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],\
 # 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\
