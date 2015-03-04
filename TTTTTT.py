@@ -2,6 +2,8 @@ import os, sys
 import pygame
 from pygame.locals import *
 
+clock = pygame.time.Clock()
+
 def load_image(name, colorkey = None):
 	fullname = os.path.join('media/images', name)
 	image = pygame.image.load(fullname)
@@ -23,6 +25,7 @@ class TTTTTMain:
 		pygame.key.set_repeat(1)
 	def MainLoop(self):
 		while 1:
+			clock.tick(60)
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					sys.exit()
