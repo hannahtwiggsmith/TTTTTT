@@ -2,8 +2,6 @@ import os, sys
 import pygame
 from pygame.locals import *
 
-BLOCK_SIZE = 24
-
 clock = pygame.time.Clock()
 
 def load_image(name, colorkey = None):
@@ -58,6 +56,10 @@ class TTTTTMain:
                             self.prev = 1
             self.screen.fill(self.black)
             self.turtle_sprites.draw(self.screen)
+            # for i in range(0,32):
+            #     self.block.place(i*24,24)
+            #     self.block_sprites.draw(self.screen)
+            self.block_sprites.draw(self.screen)
             pygame.display.flip()
 
     def LoadTurtle(self):
@@ -73,8 +75,10 @@ class Turtle(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('turtle.png', -1)
+
     def gravity(self, x):
         self.rect.move_ip(0,x)
+
     def move(self, key):
         xMove = 0
         yMove = 0
@@ -90,7 +94,14 @@ class Turtle(pygame.sprite.Sprite):
 class Block(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("data/images/block.png")
+        self.image, self.rect = load_image('block.png', -1)
+        # self.image = pygame.image.load("data/images/block.png")
+        # self.rect = pygame.rect(100,200,24,24)
+
+    # def place(self, left, top, width = 24, height = 24):
+    #     self.rect = pygame.rect(left,top,width,height)
+
+
 
 if __name__ == "__main__":
     MainWindow = TTTTTMain()
