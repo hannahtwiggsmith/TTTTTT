@@ -14,6 +14,7 @@ def load_image(name, colorkey = None):
 		image.set_colorkey(colorkey, RLEACCEL)
 	return image, image.get_rect()
 
+
 class TTTTTMain:
 	def __init__(self, width = 640, height = 480):
 		pygame.init()
@@ -25,6 +26,7 @@ class TTTTTMain:
 		self.x = 2
 		self.prev = 0
 		pygame.key.set_repeat(1)
+
 	def MainLoop(self):
 		while 1:
 			clock.tick(60)
@@ -45,6 +47,7 @@ class TTTTTMain:
 			self.screen.fill(self.black)
 			self.turtle_sprites.draw(self.screen)
 			pygame.display.flip()
+
 	def LoadSprites(self):
 		self.turtle = Turtle()
 		self.turtle_sprites = pygame.sprite.RenderPlain((self.turtle))
