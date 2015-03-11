@@ -41,7 +41,17 @@ class TTTTTMain:
 
         while 1:
             clock.tick(60)
-            self.turtle.gravity(self.x)
+            pos = pygame.sprite.collide_mask(self.turtle,self.block)
+            # print pos
+            self.turtle.gravity(self.x)  
+            if self.x == -5:
+                if pos!= None and pos > (450,300):
+                    self.n = 5
+                    self.turtle.gravity(self.n)
+            if self.x == 5:
+                if pos != None and pos <= (550,300):
+                    self.n = -5
+                    self.turtle.gravity(self.n)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -65,9 +75,11 @@ class TTTTTMain:
     def LoadTurtle(self):
         self.turtle = Turtle()
         self.turtle_sprites = pygame.sprite.RenderPlain((self.turtle))
+        self.mask = pygame.mask.from_surface(self.turtle.image)
 
     def LoadBlock(self):
         self.block = Block()
+        self.mask = pygame.mask.from_surface(self.block.image)
         self.block_sprites = pygame.sprite.RenderPlain((self.block))
 
 
@@ -90,13 +102,12 @@ class Turtle(pygame.sprite.Sprite):
             self.image = pygame.image.load('data/images/turtle.png')
         self.rect.move_ip(xMove,yMove)
 
-
 class Block(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('block.png', -1)
-        # self.image = pygame.image.load("data/images/block.png")
-        # self.rect = pygame.rect(100,200,24,24)
+        #self.image = pygame.image.load("data/images/block.png")
+        self.rect = pygame.Rect(100,200,24,24)
 
     # def place(self, left, top, width = 24, height = 24):
     #     self.rect = pygame.rect(left,top,width,height)
