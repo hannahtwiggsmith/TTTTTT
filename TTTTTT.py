@@ -24,7 +24,7 @@ class Turtle(pygame.sprite.Sprite):
         self.black = 0,0,0
         self.x = 5
         self.prev = 0
-        self.myfont = pygame.font.SysFont("monospace",100) 
+        self.myfont = pygame.font.SysFont("monospace",200) 
         pygame.key.set_repeat(1)
 
     def gravity(self, x):
@@ -48,7 +48,7 @@ class Turtle(pygame.sprite.Sprite):
             if self.rect.colliderect(wall.rect):
                 self.rect.right = wall.rect.left
                 label = self.myfont.render("WIN!",1,(255,255,255))
-                screen.blit(label, (300,250))
+                screen.blit(label, (200,200))
 
         self.rect.move_ip(self.xMove,self.yMove)
 
@@ -75,7 +75,10 @@ class Turtle(pygame.sprite.Sprite):
                 self.rect.bottom = wall.rect.top
         for scary in scaries:
             if self.rect.colliderect(scary.rect):
-                sys.exit()
+                self.rect.x = 50
+                self.rect.y = 500
+                self.prev == 0
+
 
 
 class Evil_Block(pygame.sprite.Sprite):
@@ -137,6 +140,7 @@ for i in range(0,16):
 
 # Randomly choose one of the five levels
 t = random.randrange(1,6,1)
+
 
 #Level One
 if t == 1:
@@ -278,6 +282,8 @@ class TTTTTMain:
 
     def __init__(self):
         pygame.init()
+        pygame.mixer.music.load('data/music/isengard.mp3')
+        pygame.mixer.music.play() 
 
         self.black = 0, 0, 0
 
