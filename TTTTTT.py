@@ -16,7 +16,7 @@ def load_image(name, colorkey = None):
 
 class TTTTTMain:
 
-    def __init__(self, width = 640, height = 480):
+    def __init__(self, width = 720, height = 480):
         pygame.init()
         self.black = 0, 0, 0
 
@@ -32,6 +32,7 @@ class TTTTTMain:
 
         self.LoadTurtle()
         self.LoadBlock()
+        self.LoadEvil_Block()
 
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
@@ -42,7 +43,6 @@ class TTTTTMain:
         while 1:
             clock.tick(60)
             pos = pygame.sprite.collide_mask(self.turtle,self.block)
-            # print pos
             self.turtle.gravity(self.x)  
             if self.x == -5:
                 if pos!= None and pos > (450,300):
@@ -65,11 +65,11 @@ class TTTTTMain:
                             self.x = -self.x
                             self.prev = 1
             self.screen.fill(self.black)
+
             self.turtle_sprites.draw(self.screen)
-            # for i in range(0,32):
-            #     self.block.place(i*24,24)
-            #     self.block_sprites.draw(self.screen)
             self.block_sprites.draw(self.screen)
+            self.evil_block_sprites.draw(self.screen)
+
             pygame.display.flip()
 
     def LoadTurtle(self):
@@ -81,6 +81,11 @@ class TTTTTMain:
         self.block = Block()
         self.mask = pygame.mask.from_surface(self.block.image)
         self.block_sprites = pygame.sprite.RenderPlain((self.block))
+
+    def LoadEvil_Block(self):
+        self.evil_block = Evil_Block()
+        self.mask = pygame.mask.from_surface(self.evil_block.image)
+        self.evil_block_sprites = pygame.sprite.RenderPlain((self.evil_block))
 
 
 class Turtle(pygame.sprite.Sprite):
@@ -106,13 +111,11 @@ class Block(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('block.png', -1)
-        #self.image = pygame.image.load("data/images/block.png")
-        self.rect = pygame.Rect(100,200,24,24)
 
-    # def place(self, left, top, width = 24, height = 24):
-    #     self.rect = pygame.rect(left,top,width,height)
-
-
+class Evil_Block(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_image('evil_block.png', -1)
 
 if __name__ == "__main__":
     MainWindow = TTTTTMain()
