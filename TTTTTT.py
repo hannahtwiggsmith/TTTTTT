@@ -24,6 +24,7 @@ class Turtle(pygame.sprite.Sprite):
         self.black = 0,0,0
         self.x = 5
         self.prev = 0
+        self.myfont = pygame.font.SysFont("monospace",100) 
         pygame.key.set_repeat(1)
 
     def gravity(self, x):
@@ -33,19 +34,25 @@ class Turtle(pygame.sprite.Sprite):
         self.xMove = 0
         self.yMove = 0
         if (key == K_RIGHT):
-            self.xMove = 20
+            self.xMove = 15
             self.image = pygame.image.load('data/images/turtle_right.png')
         elif (key == K_LEFT):
-            self.xMove = -20
+            self.xMove = -15  
             self.image = pygame.image.load('data/images/turtle.png')
 
         for wall in left_wall:
             if self.rect.colliderect(wall.rect):
                 self.rect.left = wall.rect.right
+
+        for wall in right_wall:
+            if self.rect.colliderect(wall.rect):
+                self.rect.right = wall.rect.left
+                label = self.myfont.render("WIN!",1,(255,255,255))
+                screen.blit(label, (300,250))
+
         self.rect.move_ip(self.xMove,self.yMove)
 
     def update(self):
-        #self.image.fill((0,0,0))
         self.gravity(self.x)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -83,10 +90,8 @@ class Wall(pygame.sprite.Sprite):
     """ Wall the player can run into. """
     def __init__(self, x, y):
         """ Constructor for the wall that the player can run into. """
-        # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
  
-        # Make a blue wall, of the size specified in the parameters
         self.image = pygame.image.load('data/images/block.png')
  
         # Make our top-left corner the passed-in location.
@@ -105,6 +110,8 @@ left_wall = pygame.sprite.Group()
 right_wall = pygame.sprite.Group()
 lower_wall = pygame.sprite.Group()
 scaries = pygame.sprite.Group()
+
+#Safe Walls
 
 for i in range(0,16):
     wall = Wall(i*50, 0)
@@ -126,16 +133,152 @@ for i in range(0,16):
     lower_wall.add(wall)
     all_sprite_list.add(wall)
 
-for i in range (0,20):
-    x = random.randrange(50,750,100)
-    y = random.randrange(1,650,100)
-    scary = Evil_Block(x,y)
-    scaries.add(scary)
+# Position the Evil Blocks
+
+# Randomly choose one of the five levels
+t = random.randrange(1,6,1)
+
+#Level One
+if t == 1:
+    for i in range(0,7):
+        x = 400 + i*50
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,6):
+        x = 300 + i*50
+        y = 300 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,5):
+        x = 150
+        y = 300 + i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,5):
+        x = 50 + i*50
+        y = 100
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,3):
+        x = 300
+        y = 150 + i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,1):
+        x = 200
+        y = 500
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+
+#Level Two
+if t == 2:
+    for i in range(0,14):
+        x = 50 + i*50
+        y = 150
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,11):
+        x = 200 + i*50
+        y = 400
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,2):
+        x = 150
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+
+#Level Three
+if t == 3:
+    for i in range(0,6):
+        x = 250 + i*50
+        y = 150
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,7):
+        x = 200 + i*50
+        y = 400
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,7):
+        x = 350
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,7):
+        x = 400
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,2):
+        x = 50 + i*50
+        y = 250
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,8):
+        x = 700
+        y = 400 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,2):
+        x = 650
+        y = 250 + i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+
+#Level Four
+if t == 4:
+    for i in range(0,8):
+        x = 150
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,8):
+        x = 300 
+        y = 400 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,8):
+        x = 450
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,8):
+        x = 600 
+        y = 400 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+
+#Level Five
+if t == 5:
+    for i in range(0,8):
+        x = 150
+        y = 500 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,8):
+        x = 150 + i*50
+        y = 150
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,8):
+        x = 350 + i*50
+        y = 400
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+    for i in range(0,7):
+        x = 700
+        y = 350 - i*50
+        scary = Evil_Block(x,y)
+        scaries.add(scary)
+
 
 class TTTTTMain:
 
     def __init__(self):
         pygame.init()
+
         self.black = 0, 0, 0
 
         self.width = SCREEN_WIDTH
@@ -168,7 +311,7 @@ class TTTTTMain:
     def LoadTurtle(self):
         self.turtle = Turtle()
         self.turtle_sprites = pygame.sprite.RenderPlain((self.turtle))
-        #self.mask = pygame.mask.from_surface(self.turtle.image)
+
     def loser(self):
         self.screen.fill(self.black)
         load_image('lose.png')
