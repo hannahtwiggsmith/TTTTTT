@@ -1,5 +1,6 @@
 import os, sys
 import pygame
+import random
 from pygame.locals import *
 
 clock = pygame.time.Clock()
@@ -18,6 +19,8 @@ class Turtle(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('turtle.png', -1)
+        self.rect.x = 50
+        self.rect.y = 550
         self.black = 0,0,0
         self.x = 5
         self.prev = 0
@@ -27,15 +30,19 @@ class Turtle(pygame.sprite.Sprite):
         self.rect.move_ip(0,x)
 
     def move(self, key):
-        xMove = 0
-        yMove = 0
+        self.xMove = 0
+        self.yMove = 0
         if (key == K_RIGHT):
-            xMove = 20
+            self.xMove = 20
             self.image = pygame.image.load('data/images/turtle_right.png')
         elif (key == K_LEFT):
-            xMove = -20
+            self.xMove = -20
             self.image = pygame.image.load('data/images/turtle.png')
-        self.rect.move_ip(xMove,yMove)
+
+        for wall in left_wall:
+            if self.rect.colliderect(wall.rect):
+                self.rect.left = wall.rect.right
+        self.rect.move_ip(self.xMove,self.yMove)
 
     def update(self):
         #self.image.fill((0,0,0))
@@ -53,11 +60,24 @@ class Turtle(pygame.sprite.Sprite):
                         self.x = -self.x
                         self.prev = 1
 
+        for wall in top_wall:
+            if self.rect.colliderect(wall.rect):
+                self.rect.top = wall.rect.bottom
+        for wall in lower_wall:
+            if self.rect.colliderect(wall.rect):
+                self.rect.bottom = wall.rect.top
+        for scary in scaries:
+            if self.rect.colliderect(scary.rect):
+                sys.exit()
+
 
 class Evil_Block(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('evil_block.png', -1)
+
+        self.rect.y = y
+        self.rect.x = x
 
 class Wall(pygame.sprite.Sprite):
     """ Wall the player can run into. """
@@ -80,27 +100,37 @@ SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 all_sprite_list = pygame.sprite.Group()
-wall_list = pygame.sprite.Group()
+top_wall = pygame.sprite.Group()
+left_wall = pygame.sprite.Group()
+right_wall = pygame.sprite.Group()
+lower_wall = pygame.sprite.Group()
+scaries = pygame.sprite.Group()
 
 for i in range(0,16):
-    wall = Wall(i*50 - 450, -275)
-    wall_list.add(wall)
+    wall = Wall(i*50, 0)
+    top_wall.add(wall)
     all_sprite_list.add(wall)
  
 for i in range(0,12):
-    wall = Wall(-450, i*50 - 275)
-    wall_list.add(wall)
+    wall = Wall(0, i*50)
+    left_wall.add(wall)
     all_sprite_list.add(wall)
 
 for i in range(0,12):
-    wall = Wall(300, i*50 - 275)
-    wall_list.add(wall)
+    wall = Wall(750, i*50)
+    right_wall.add(wall)
     all_sprite_list.add(wall)
 
 for i in range(0,16):
-    wall = Wall(i*50 - 450, 275)
-    wall_list.add(wall)
+    wall = Wall(i*50, 550)
+    lower_wall.add(wall)
     all_sprite_list.add(wall)
+
+for i in range (0,20):
+    x = random.randrange(50,750,100)
+    y = random.randrange(1,650,100)
+    scary = Evil_Block(x,y)
+    scaries.add(scary)
 
 class TTTTTMain:
 
@@ -123,8 +153,11 @@ class TTTTTMain:
 
         pygame.display.flip()
         all_sprite_list.draw(screen)
+        scaries.draw(screen)
         while 1:
             clock.tick(60)
+
+            self.turtle_sprites.clear(self.screen, self.background)
 
             self.turtle.update()
 
@@ -135,8 +168,11 @@ class TTTTTMain:
     def LoadTurtle(self):
         self.turtle = Turtle()
         self.turtle_sprites = pygame.sprite.RenderPlain((self.turtle))
-        self.mask = pygame.mask.from_surface(self.turtle.image)
-
+        #self.mask = pygame.mask.from_surface(self.turtle.image)
+    def loser(self):
+        self.screen.fill(self.black)
+        load_image('lose.png')
+        pygame.display.flip()
 
 if __name__ == "__main__":
     MainWindow = TTTTTMain()
