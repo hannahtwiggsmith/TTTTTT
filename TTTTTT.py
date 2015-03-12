@@ -14,84 +14,14 @@ def load_image(name, colorkey = None):
         image.set_colorkey(colorkey, RLEACCEL)
     return image, image.get_rect()
 
-class TTTTTMain:
-
-    def __init__(self, width = 720, height = 480):
-        pygame.init()
-        self.black = 0, 0, 0
-
-        self.width = width
-        self.height = height
-
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        self.x = 5
-        self.prev = 0
-        pygame.key.set_repeat(1)
-
-    def MainLoop(self):
-
-        self.LoadTurtle()
-        self.LoadBlock()
-        self.LoadEvil_Block()
-
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((0,0,0))
-
-        pygame.display.flip()
-
-        while 1:
-            clock.tick(60)
-            pos = pygame.sprite.collide_mask(self.turtle,self.block)
-            self.turtle.gravity(self.x)  
-            if self.x == -5:
-                if pos!= None and pos > (450,300):
-                    self.n = 5
-                    self.turtle.gravity(self.n)
-            if self.x == 5:
-                if pos != None and pos <= (550,300):
-                    self.n = -5
-                    self.turtle.gravity(self.n)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                elif event.type == KEYDOWN:
-                    if ((event.key == K_RIGHT)
-                    or (event.key == K_LEFT)):
-                        self.turtle.move(event.key)
-                        self.prev = 0
-                    elif (event.key == K_SPACE):
-                        if self.prev == 0:
-                            self.x = -self.x
-                            self.prev = 1
-            self.screen.fill(self.black)
-
-            self.turtle_sprites.draw(self.screen)
-            self.block_sprites.draw(self.screen)
-            self.evil_block_sprites.draw(self.screen)
-
-            pygame.display.flip()
-
-    def LoadTurtle(self):
-        self.turtle = Turtle()
-        self.turtle_sprites = pygame.sprite.RenderPlain((self.turtle))
-        self.mask = pygame.mask.from_surface(self.turtle.image)
-
-    def LoadBlock(self):
-        self.block = Block()
-        self.mask = pygame.mask.from_surface(self.block.image)
-        self.block_sprites = pygame.sprite.RenderPlain((self.block))
-
-    def LoadEvil_Block(self):
-        self.evil_block = Evil_Block()
-        self.mask = pygame.mask.from_surface(self.evil_block.image)
-        self.evil_block_sprites = pygame.sprite.RenderPlain((self.evil_block))
-
-
 class Turtle(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('turtle.png', -1)
+        self.black = 0,0,0
+        self.x = 5
+        self.prev = 0
+        pygame.key.set_repeat(1)
 
     def gravity(self, x):
         self.rect.move_ip(0,x)
@@ -100,22 +30,113 @@ class Turtle(pygame.sprite.Sprite):
         xMove = 0
         yMove = 0
         if (key == K_RIGHT):
-            xMove = 10
+            xMove = 20
             self.image = pygame.image.load('data/images/turtle_right.png')
         elif (key == K_LEFT):
-            xMove = -10
+            xMove = -20
             self.image = pygame.image.load('data/images/turtle.png')
         self.rect.move_ip(xMove,yMove)
 
-class Block(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('block.png', -1)
+    def update(self):
+        #self.image.fill((0,0,0))
+        self.gravity(self.x)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == KEYDOWN:
+                if ((event.key == K_RIGHT)
+                or (event.key == K_LEFT)):
+                    self.move(event.key)
+                    self.prev = 0
+                elif (event.key == K_SPACE):
+                    if self.prev == 0:
+                        self.x = -self.x
+                        self.prev = 1
+
 
 class Evil_Block(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('evil_block.png', -1)
+
+class Wall(pygame.sprite.Sprite):
+    """ Wall the player can run into. """
+    def __init__(self, x, y):
+        """ Constructor for the wall that the player can run into. """
+        # Call the parent's constructor
+        pygame.sprite.Sprite.__init__(self)
+ 
+        # Make a blue wall, of the size specified in the parameters
+        self.image = pygame.image.load('data/images/block.png')
+ 
+        # Make our top-left corner the passed-in location.
+        self.rect = self.image.get_rect()
+        self.rect.y = y
+        self.rect.x = x
+
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+
+all_sprite_list = pygame.sprite.Group()
+wall_list = pygame.sprite.Group()
+
+for i in range(0,16):
+    wall = Wall(i*50 - 450, -275)
+    wall_list.add(wall)
+    all_sprite_list.add(wall)
+ 
+for i in range(0,12):
+    wall = Wall(-450, i*50 - 275)
+    wall_list.add(wall)
+    all_sprite_list.add(wall)
+
+for i in range(0,12):
+    wall = Wall(300, i*50 - 275)
+    wall_list.add(wall)
+    all_sprite_list.add(wall)
+
+for i in range(0,16):
+    wall = Wall(i*50 - 450, 275)
+    wall_list.add(wall)
+    all_sprite_list.add(wall)
+
+class TTTTTMain:
+
+    def __init__(self):
+        pygame.init()
+        self.black = 0, 0, 0
+
+        self.width = SCREEN_WIDTH
+        self.height = SCREEN_HEIGHT
+
+        self.screen = pygame.display.set_mode((self.width, self.height))
+
+    def MainLoop(self):
+
+        self.LoadTurtle()
+
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((0,0,0))
+
+        pygame.display.flip()
+        all_sprite_list.draw(screen)
+        while 1:
+            clock.tick(60)
+
+            self.turtle.update()
+
+            self.turtle_sprites.draw(self.screen)
+
+            pygame.display.flip()
+
+    def LoadTurtle(self):
+        self.turtle = Turtle()
+        self.turtle_sprites = pygame.sprite.RenderPlain((self.turtle))
+        self.mask = pygame.mask.from_surface(self.turtle.image)
+
 
 if __name__ == "__main__":
     MainWindow = TTTTTMain()
